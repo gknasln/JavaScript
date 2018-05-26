@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="600">
+	Your browser does not support canvas
+</canvas>
+<script>
+	
+const canvas = document.querySelector("#draw");
+const ctx = canvas.getContext("2d");
+ctx.lineJoin = "round";
+ctx.lineCap = "round"; //round parametresi, çizimin dairelerden oluşmasını sağlıyor
+//ctx.globalCompositeOperation = "sourceIn";
+ctx.lineWidth = 5;
+let lastY = 0;
+let lastX = 0;
+let direction = false;
+let hue = 0;
+
+ /*bu değişken flag görevi görüyor true ise fare canvas üzerinde hareket ederken draw metodunu rahat bırakıcak 
+	false ise draw metodu başlangıcında return edecek ve dolayısıyla çizim yapılmayacak. */
+let isClicked = false; 
+
+function draw(e){
+	if(!isClicked) return;
+	ctx.strokeStyle = 'hsl('+hue+', 100%, 50%)';
+	ctx.beginPath();
+	ctx.moveTo(lastX, lastY);
+	ctx.lineTo(e.offsetX, e.offsetY);
+	ctx.stroke();
+	[lastX, lastY] = [e.offsetX, e.offsetY]; //es6 ile yeni gelen destructring array özelliği ile toplu değer atama
+	
+	
+	
+	hue++;
+	if(hue >= 360){
+		hue = 0;
+	}
+	
+	//Eğer çizgi kalınlığı 70 den düşük veya 1' den küçük olursa flag ı ters çevir
+	if(ctx.lineWidth >= 70 || ctx.lineWidth <= 1){
+		direction = !direction;
+	}
+	
+	//flag ın vereceği yön çizgi kalınlığı 0 ise arttırma 70 ise azaltmaya yönlendirecek.
+	if(direction){
+		ctx.lineWidth++;
+	}else{
+		ctx.lineWidth--;
+	}
+}
+/*fare canvas üzerinde hareket ettikçe çizmeye devam edicek fakat diğer 3 eventListener ile sadece fareyi tıkladığımızda 
+	aksiyon almasını belirtiyoruz. */ 
+canvas.addEventListener('mousedown', (e)=> {
+	isClicked = true;
+	/*mouse tıklanmamış iken başlangıç noktalarını güncellememiz lazımki
+		eski başlangıç noktasından yeni noktaya bağlantı kurmasın*/
+	[lastX, lastY] = [e.offsetX, e.offsetY]; 
+}); 
+canvas.addEventListener('mousemove',  draw);  
+canvas.addEventListener('mouseup', () => isClicked = false );  
+canvas.addEventListener('mouseout', () => isClicked = false ); //mause tıklanmış şekilde iken canvas'tan çıkılırsa bug olmasın diye
+
+	
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+  canvas{
+	border: solid  2px gray;
+  }
+  
+</style>
+
+</body>
+</html>

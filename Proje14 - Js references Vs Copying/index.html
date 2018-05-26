@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <title>JS Reference VS Copy</title>
+    </head>
+    <body>
+
+    <script>
+        // start with strings, numbers and booleans
+        let age = 100;
+        let age2 = age;
+        console.log(age, age2);
+        age = 200;
+        console.log(age, age2);
+        
+        /*Bir primitive  değişkeni başka bir değişkene atadığımızda, o değişkenin değerini atamış oluruz.
+            yani kopyalanır. Dolayısıyla ilk değişkenin değeri değiştiğinde diğerinin değeri etkilenmez.*/
+            
+        //String vs. içinde durum aynıdır. 
+        let name = "Gökhan";
+        let name2 = "Gökhan";
+        console.log(name, name2);
+        name = "Aslan";
+        console.log(name, name2);
+
+
+        // Bir dizi değişkenimiz var 
+        const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+        
+        // ve bunu farklı bir diziye kopyalamak istiyoruz..
+        const team = players;   
+
+        // You might think we can just do something like this:
+        team[2] = "Hakan";
+
+        console.log("players dizisi : " + players);
+        console.log("team dizisi : " + team);        
+        
+        /*Bir diziyi primitive değişken kopyalar gibi diğer bir diziye aktarmaya çalışır isek aktaramayız!
+            ÖRnekteki gibi team ın 2. indeksini değiştirdiğimizde aslında players dizisinin 2. indeksini değiştirmiş
+            oluruz. Çünkü team bir array değil, players dizisinin referansı oluyor. Dolayısıyla team değişkenine ulaştığımızda
+            aslında players dizisine ulaşmış oluyoruz. */ 
+
+        // however what happens when we update that array?
+        // now here is the problem!
+        // oh no - we have edited the original array too!
+        // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+
+
+        // Eğer biz bir diziyi başka bir diziye kopyalmak istersek ? 
+        /* splice metodunu parametre vermeden kullandığımız takdirde teknik olarak 
+            bütün dizi elemanlarını birbirinden ayırır ve dizinin tamamı return eder. 
+            dolayısıyla yeni bir değişkene diziyi kopyalamış oluruz. */
+        const team2 = players.splice();
+        team2[2] = "Hakan";//teams artık kopya olduğu için players dizisinin 2. indeksi değişmedi.
+        console.log(team2);
+        console.log(players);         
+        // one way
+        // or create a new array and concat the old one in
+        const team3 = [].concat(players); // bu şekilde de players  dizisini yeni bir diziye kopyalayabiliriz. 
+
+
+        // or use the new ES6 Spread
+        //EcmaScript6 ile gelen spread özelliği ile de mevcut diziyi yeni diziye kopyalayabiliriz. 
+        const team4 = [...players];
+        team4[3] = "değiştirdiimm";
+
+        // Bu şekilde işlem sonucu players değişkeni değişmeyecektir.
+        console.log(players);
+        
+        //Arrays.from metodu da parametre olarak verdiğimiz diziyi yeni diziye  kopyalar. 
+        team5 = Array.from(players);
+        team5[0] = "Sinan";
+
+        console.log(team5);
+        console.log(players);
+        
+
+        // Dizilerdeki aynı yapı objelerde de geçerlidir. 
+        // with Objects
+        const person = {
+        name: 'Wes Bos',
+        age: 80
+        };
+        // and think we make a copy:
+        
+        const captain = person;
+        // captain.age = 99;
+        console.log(person);
+        // Yine aynı şekilde captain aslında person objesinin referansını taşıdığı için person objesi değişir. 
+        
+        // Peki objelerde nasıl kopyalama işlemi yaparız ? 
+        //Bunun için Object.assing metodunu kullanabiliriz. 
+        const cap2 = Object.assign({}, person, {age: 12});
+        const cap3 = Object.assign({}, person, {number: 99}); // orjinal dizide olmayan değişken yazarsak yeni oluşturur.
+        console.log("person objesi : " + person.age);
+        console.log(cap2);
+        
+
+
+        // We will hopefully soon see the object ...spread
+        //spread özelliği yakında objeler içinde gelecek imiş. 
+        //    cap4 = {...captain};
+    
+
+
+
+        /* Object.assign özelliği sadece objenin ilk derinliğini kopyalar. Yani obje içerisindeki diğer objeleri kopyalamaz
+            ve referansını verir. */ 
+        const Gokhan = {
+            name: "Gokhan",
+            age: 26,
+            social: {
+                twitter: "gknasln",
+                facebook: "gknasln"
+            }
+        };
+        gkn = Object.assign({}, Gokhan); // ile bütün diziyi kopyalayabiliriz. 
+        gkn = gkn.social.twitter = "none"; // bu Gokhan dizisinin de twitter değerini değiştirir.  
+
+        console.log(Gokhan.social); // yazdırdığımızda twitter none olacaktır. 
+         
+        /* Objenin bütün derinliğini kopyalayabileceğimiz bir yöntemde var! buna deepclone yöntemi diyor wes bos 
+            Bunun için JSON.stringify ile objeyi ilk önce json değerine dolayısıyla tamamen stringe dönüştürüp, 
+            daha sonra JSON.parse ile tekrar bir objeye dönüştürür ve değişkene atarız. Bu metodlar orjinal değişkenin 
+            değerini alıp yeni bir değer verdiği için birebir kopyalama işlemi oluşur. */ 
+
+        gkn2 = JSON.parse(JSON.stringify(Gokhan)); //Obje tamamen yeni bir objeye kopyalanmış olur. 
+
+    </script>
+
+    </body>
+</html>

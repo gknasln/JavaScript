@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hold Shift to Check Multiple Checkboxes</title>
+</head>
+<body>
+  <style>
+    html {
+      font-family: sans-serif;
+      background:#ffc600;
+    }
+    .inbox {
+      max-width:400px;
+      margin:50px auto;
+      background:white;
+      border-radius:5px;
+      box-shadow:10px 10px 0 rgba(0,0,0,0.1);
+    }
+    .item {
+      display:flex;
+      align-items:center;
+      border-bottom: 1px solid #F1F1F1;
+    }
+    .item:last-child {
+      border-bottom:0;
+    }
+    input:checked + label {
+     /* background:#F9F9F9;*/
+      text-decoration: line-through;
+    }
+    input[type="checkbox"] {
+      margin:20px;
+    }
+    label {
+      margin:0;
+      padding:20px;
+      transition:background 0.2s;
+      flex:1;
+      font-family:'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border-left: 1px solid #D1E2FF;
+    }
+  </style>
+   <!--
+   The following is a common layout you would see in an email client.
+   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+  -->
+  <div class="inbox">
+    <div id="div1" class="item">
+      <input id="0" type="checkbox">
+      <label  for="0">This is an inbox layout.</label>
+    </div>
+    <div id="div2" class="item">
+      <input id="1" type="checkbox">
+      <label for="1">Check one item</label>
+    </div>
+    <div class="item">
+      <input id="2" type="checkbox">
+      <label for="2">Hold down your Shift key</label>
+    </div>
+    <div class="item">
+      <input id="3" type="checkbox">
+      <label for="3">Check a lower item</label>
+    </div>
+    <div class="item">
+      <input id="4" type="checkbox">
+      <label for="4">Everything inbetween should also be set to checked</label>
+    </div>
+    <div class="item">
+      <input id="5" type="checkbox">
+      <label for="5">Try do it without any libraries</label>
+    </div>
+    <div class="item">
+      <input id="6" type="checkbox">
+      <label for="6">Just regular JavaScript</label>
+    </div>
+    <div class="item">
+      <input id="7" type="checkbox">
+      <label for="7">Good Luck!</label>
+    </div>
+    <div class="item">
+      <input id="8" type="checkbox">
+      <label for="8">Don't forget to tweet your result!</label>
+    </div>
+  </div>
+
+<script>
+checkboxes = document.querySelectorAll("[type=checkbox]");
+
+let isHoldingShift = false;
+
+//bu değişken shift tuşunun basılı bırakıldığını temsil ediyor yani flag görevi görüyor.
+let lastClicked = -1;
+
+
+checkboxes.forEach(index => { 
+	index.addEventListener("click", () => {		
+		if(isHoldingShift && lastClicked !== -1){
+			selectMultiple(Number(index.id));
+		}
+		lastClicked = Number(index.id);
+	});
+});
+
+function selectMultiple(currentClicked){
+	/* eğer shift e basılıp son tıklanan daha önce tıklananın üstünde ise negatif 
+		değer dönücektir. Dolayısıyla yukarıya doğru işlem yapmamız gerekir. */ 
+	if( (currentClicked - lastClicked) < 0 ){  // yukarıya doğru işlem yapılacak ise
+		let i = currentClicked; 
+		for(;i <= lastClicked; i++){
+			if(checkboxes[lastClicked].checked)
+				checkboxes[i].checked = true;
+			else
+				checkboxes[i].checked = false;
+		}
+	}else{ // aşağıya doğru işlem yapılacak ise
+		let j = lastClicked;
+		for(; j <= currentClicked; j++){
+			if(checkboxes[lastClicked].checked)
+				checkboxes[j].checked = true;
+			else
+				checkboxes[j].checked = false;
+		}
+	}
+}
+
+
+//shift tuşuna basıldığında flag ı true yapıcak
+window.addEventListener("keydown", (e) => {
+	if(e.key === "Shift"){
+		isHoldingShift = true;
+	}
+});
+
+/*shift tuşunu bıraktığımızda flag false olacak if yapısı koydum ki  shift e 
+	basarken farklı bir tuşa basarsa flag bozulmasın diye aksi takdirde her key 
+	basıldığında flag ı false yapıcak */ 
+window.addEventListener("keyup", (e) => {
+	if(e.key === "Shift"){
+		isHoldingShift = false;
+		let i = 0;
+		document.querySelectorAll(".item").forEach(index =>{ 
+		index.style.backgroundColor = "white";
+		});
+	}
+});
+
+const items = document.querySelectorAll(".item");
+
+/* Bu kısmı oluşturma amacım seçilecek veye seçimi kaldırılacak elementlerin shift basılı iken 
+	renklendirilmesi için. Bu sayede kullanıcı hangi elemanları topluca seçeceğini daha iyi 
+	kavramış oluyor. */ 
+items.forEach(item => {
+	item.addEventListener("mouseover", ()=> {
+		if(isHoldingShift && lastClicked != -1){
+			const currentFocused = Number(item.querySelector("input").id);
+			if( (currentFocused - lastClicked) > 0 ){ //yukarıdan aşağı doğru
+				let i = 0;
+				for(; i < items.length; i++){
+					if(i <= currentFocused && lastClicked <= i){ //Toplu seçilecek elemanlar ise
+						if(checkboxes[lastClicked].checked){
+							items[i].style.backgroundColor = "#8af498";//check için
+						}else{
+							items[i].style.backgroundColor = "#ffb3b3";//uncheck için
+						}
+					}else{
+						items[i].style.backgroundColor = "white"; //toplu seçilecek elemanlar değilse
+					}
+				}
+			}else{ //aşağıdan yukarıya doğru ise
+				let j = 0;
+				for(; j < items.length; j++){
+					if(j >= currentFocused && lastClicked >= j){ //Toplu seçilecek elemanlar ise
+						if(checkboxes[lastClicked].checked){
+							items[j].style.backgroundColor = "#8af498"; //check için
+						}else{
+							items[j].style.backgroundColor = "#ffb3b3"; //uncheck için
+						}
+					}else{
+						items[j].style.backgroundColor = "white"; //toplu seçilecek elemanlar değilse
+					}
+				}
+			}
+		}
+	});
+});
+
+
+</script>
+</body>
+</html>

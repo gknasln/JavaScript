@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="600">
+	Tarayıcınız Canvas özelliğini desteklemiyor.
+</canvas>
+<script>
+	const canvas = document.getElementById("draw");
+	const ctx = canvas.getContext("2d");
+	var color = "#0000ff";
+	
+	var width = canvas.width;
+	var height = canvas.height;
+	var x = width/2;
+	var y = height/2;
+	var dx = 5;
+	var dy = 5;
+	
+	function jumpingBall(){
+	
+		clear();
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		ctx.arc(x ,y,20,0, 2 * Math.PI);
+		ctx.closePath();
+		x +=dx;
+		y +=dy;
+		ctx.fill();
+		/* Eğer top kenarlara ulaşırsa topun gidiş yönünü belirleyen dx ve dy değişkenlerini
+				negatif veya pozitifliğini değiştiriyor. +5 vermemin sebebi top sekerken kenarlara
+				tam gömülmesin diye */
+		if(x+5 > width || x < 5){
+			dx = dx - (dx*2);
+		}
+		if(y+5 > height || y < 5){
+			dy = dy - (dy*2);
+		}
+		
+	}
+	
+	canvas.addEventListener('click', function(e){
+		 x = e.x;
+		 y = e.y;
+	   setRandomColor();
+	});
+	
+	/*hsl renklerini sadece hue kısmına 0 ile 360 arasındabir sayısal değer yazarak 
+		ayarlayabiliriz. Bende math.random ile 0 ile 360 arasında bir vererek her tıklayışta
+		farklı renk oluşturmasını sağladım. */
+	function setRandomColor(){
+		 color = "hsl(" + Math.ceil(Math.random()*360) + ", 100%, 50%)" ;
+	}
+
+
+	function clear(){
+		ctx.beginPath();
+		ctx.fillStyle = "#ffffff";
+		ctx.fillRect(0,0,canvas.width, canvas.height);
+		ctx.closePath();
+		ctx.fill();
+	};
+	
+	setInterval(jumpingBall, 20);
+	
+	
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+  canvas{
+	border: solid  2px gray;
+  }
+  #navBar{
+	height: 3rem;
+  }
+  #navBar button{
+	margin: 1rem;
+  }
+  
+</style>
+
+</body>
+</html>

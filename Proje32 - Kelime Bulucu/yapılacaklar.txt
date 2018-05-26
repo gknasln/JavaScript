@@ -1,0 +1,108 @@
+1. validate metodu oluþtur ve forma girilen verileri kontrol et. 
+   *  sadece a' dan z' ye kadar harf olmalý ve en fazla 2 adet joker girilmeli 
+   *  Koþul doðru ise metod true deðeri döndürsün
+
+
+2. foundedWords dizisi oluþtur.
+
+
+
+3. action metodu oluþtur. Bütün iþlemler bu action metodu içerisinde gerçekleþsin.
+   
+4. Hesapla butonuna basýldýðýnda action metodu devreye girsin. Yani click eventi ekle
+
+
+
+5. action içerisine fetch metodunu koy
+
+
+
+6. Action metodu içerisinde searchPath deðiþkeni oluþtur. Kullanýcý kelime içerisinde þu harf olsun
+ yöntemi ile arama yapacaksa 1,  iki harf arasýnda bir kelime arama yöntemini kullanýcak 
+        ise bu deðiþkeni 1 yap.
+
+
+
+7. Action metodu içerisinde enteredWords deðiþkeni oluþtur. ve girilen kelimeyi bu deðiþkene at. 
+   Eðer mustHave veya between letters girildi ise onuda bu deðiþkene ekle ki toplam cümleyi alsýn
+8. Action metodu içerisinde mustHave deðiþkeni oluþtur ve girilen musthave deeðerini buraya at. 
+     eðer deðer girilmemiþ ise, null deðeri at. 
+9.   Action metodu içerisinde betWeenLetter objesi oluþtur. Bu objenin içerisinde
+      *firstLetter deðiþkeni oluþtur.  Bu deðiþken char olsun. Ve girilen ilk kelimeyi bu deðiþkene at.  
+      *letterSpace deðiþkeni oluþtur. Option inputu içerisindeki sayýsal deðeri bu deðiþkene at
+      *secondLetter deðiþkeni oluþtur. Bu deðiþken tek karakter içeren char tipinde olucak
+    Bu deðerler seçilmediyse null deðeri atanacak. 
+10. fetch metodu çaðýr. Fetch metodu her çaðýrýldýðýnda veritabanýndaki bütün kelimeleri tek tek çaðýrýr. 
+    Bu deðerleri tek tek deðiþkene atmak yerine o satýrda checkCurrentWord metodunu çaðýr ve metod kelimeyi eþleþtirirse
+    direkt olarak foundedWords dizisine eklesin. 
+11. checkCurrentWord metodu 4 parametre alýcak. 
+ * Ýlk parametre;  aranacak cümle
+ * ikinci parametre ise arama metodunu belirleyecek 0 ise mustHave, 1 ise betweeenLetters
+ * Üçüncü parametre mustHave içericek
+  * Dördüncü parametre de betweenLetter objesi 
+12. Bulunan kelimelerin puanlarýný vermesi için calculate points metodu oluþturmamýz gerekiyor. 
+13. foundedWords.map ile kelimelere puanlarý verilecek.  Joker harfleri 0 puan olacak 
+14. foundedWords.sort ile dizi puana göre büyükten küçüðe sýralanacak. 
+15. foundedWords.map ile joker, musthave veya betweenLetters kelimeleri renklendirilecek. 
+ joker harfleri kýrmýzý, musthave mavi, betweenLetters yine mavi olacak. 
+ Bunlarý span etiketleri arasýna alýp jokerler için j sýnýfý diððerleri  için 
+ b sýnýfý oluþturabiliriz.  css ile fontu kýrmýzý ve bold yaparýz. 
+   
+
+
+
+
+checkCurrentWord(word){
+    if(enteredWords.length < word.length) { return; } 
+    let currentEntereds = enteredWords;
+    let wordToAdd = "";
+    let jokers= getJokers;
+    const flag = false; 
+    let i = 0;
+    let j = 0;
+    for(; i < word.length; i++){
+ flag = false;
+ for(; j < currentEntereds.length; j++){
+     if(words.charAt(i) == currentEntereds.charAt(j){
+         flag = true;
+  currentEntereds = currentEntereds.splice(0,i) + currentEntereds.splice(i+1, currentEntereds.length);
+      }
+ }
+ if(flag === true){
+     wordToAdd += words.charAt(i);
+        }else{
+     if(jokers > 0){
+        wordToAdd += "#"+charAt(i);  //harfin solunda # sembolu var ise joker kullanýlmýþ demektir.
+        jokers--;
+     }else{
+     return;
+            }
+ }
+    } // j döngüsü bitimi
+    /* iki döngüde bittiktten sonra flag  true kalýr ise kelime girilen harflerin arasýnda var demektir.
+        o zaman kelime  foundedWords dizisine eklenir */  
+    if(flag === true){ foundedWords.push(wordToAdd) }; 
+}// checkCurrentWord metodu bitimi  
+
+
+
+
+function validate(text){
+    let jokerNumber = 0;
+    let ch;
+    let i = 0;
+    for(; i < text.length; i++){
+		ch = text.charCodeAt(i); 
+		console.log(ch);
+		if( ((ch >= 97 && 122 >= ch) || ch == 42) ){
+			if(ch == 42) { jokerNumber++ };
+		}else{
+			return false;
+		}
+	}
+	if(jokerNumber > 2){
+		return 2;
+	}else{
+		return 1;
+   }
+}

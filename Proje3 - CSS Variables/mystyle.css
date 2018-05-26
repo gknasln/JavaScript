@@ -1,0 +1,61 @@
+    /*
+      misc styles, nothing to do with CSS variables
+    */
+	
+    body {
+	
+	  margin : 0;
+	  padding : 0;
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 30px;
+    }
+	
+	:root{ 
+		--base: #ffc600;
+		--spacing: 10px;
+		--blur: 0px;
+	}
+	
+	.slider {
+    -webkit-appearance: none;
+    height: 10px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+	.slider:hover {
+		opacity: 1;
+	}
+
+	
+	
+	img{
+		width : 700px;
+		height :370px;
+		padding : var(--spacing);
+		background: var(--base);
+		filter: blur(var(--blur));
+			
+	}
+	
+	.hl{
+		color: var(--base);
+	}
+	
+	
+    .controls {
+      margin-bottom: 50px;
+    }
+    input {
+      width:100px;
+    }
+	
+	

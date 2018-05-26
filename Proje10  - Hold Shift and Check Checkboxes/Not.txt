@@ -1,0 +1,3 @@
+Benim yaptýðým yöntemde normal bir mouse eventi  içerisinde bile key kontrol edilebiliyormu bilmiyordum 
+bu yüzden shift in basýlý olduðunu doðrulayabilmek için flag oluþturdum (java kafasýndayým hala) döngü 
+içerisinde if koþulu koyduðum için sadece toplu seçme iþlemini deðil toplu seçmeyi býrakabiliyorda.

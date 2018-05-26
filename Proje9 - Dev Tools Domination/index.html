@@ -1,0 +1,108 @@
+	<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [
+		{ name: 'Snickers', age: 2 },
+		{ name: 'hugo', age: 8 }
+	];
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+    // Regular
+	console.log("Bu normal bir mesaj");
+
+    // Interpolated ikinci parametredeki string i %s yerine yerleştiriyor.
+	console.log("Merhaba ben %s metinim!", "bok gibi bir ");
+	
+    // Styled
+	console.log('%c merhaba ben düzenlenmiş bir metinim',
+	"font-size: 20px; background: red;");
+	
+	// warning!
+	console.warn("Ben bir uyarı metniyim");
+	
+    // Error :|
+    console.error("Ben bir hata metniyim!");
+	
+	// Info
+	console.info("Ben bir bilgi metniyim");
+	
+    // Testing
+	/*Bu özellik ilk string içerisinde verceğimiz koşulu test ediyor 
+		ve eğer koşul doğru değil ise ikinci parametre kısmındaki string i 
+		konsola yazdırıyor. Dolayısıyla program içerisinde istediğimiz herşeyi
+		programı etkilemeden konsoldan test edebiliyoruz. */
+	console.assert( 1 === 2, 'koşul yanlış'); 
+	const p = document.querySelector("p");
+	console.assert(p.classList.contains("ouch"), "p içerisinde bu sınıf yok");
+	
+	
+	
+    // clearing Bu özellik konsoldaki mevcut yazıları temizliyor. 
+	console.clear();
+	
+	
+    // Viewing DOM Elements
+	console.log(p); //Bu şekilde elementin içerisindeki html kodunu göstericektir.
+	
+	/* fakat console.dir(element) ile istediğimiz dom elementini konsolda bir obje 
+		olarak gösterecektir ve dolayısıyla içerisindeki bütün metodları, datasetleri
+		vs. dom elementinin her detayına bakabiliriz. */
+	console.dir(p);
+	
+    // Grouping together
+	/*kompleks bir kod yazdığımızda o kısımadki bazı verileri konsolda 
+		bu şekilde gruplayarak inceleyebiliriz. buda bize kodlarımızı olmaması
+		gerektiği gibi kurcalamadan çözebilmemizi sağlar */ 
+	dogs.forEach(dog => {
+	//Bu şekilde verileri köpeklerin isimlerine göre gruplandırabiliyoruz. 
+		console.group(""+ dog.name);
+		//console.groupCollapsed(""+ dog.name); buda başta grupları kapalı tutar
+		console.log("this is " + dog.name );
+		console.log(dog.name + " is " + dog.age + "years old");
+		console.groupEnd(""+dog.name);  
+	});
+	
+	
+    // counting
+	/* program içerisinde belirttiğimiz ismin kaç kez kullanıldığnı sayar
+		sadece aynı isimde console.count yazarsak sayıyı arttırır. Dolayısıyla 
+		bu özellikle  işlemleri  kaç kez yaptığımız sayabiliriz. 
+	*/
+	console.log("Gökhan");
+	console.count("Gökhan");
+	console.count("Hakan");
+	console.count("Hakan");
+	console.count("Gökhan");
+	
+    // timing
+	
+	/*Timing özelliği bir işlemin ne kadar zaman aldığını hesaplamamızı sağlar.
+		Kullanım mantığı aslında basit. İlk satırda time özelliğini başlatıp ona 
+		parametre kısmında isimverdiğimizde time metodu  aynı parametredeki
+		timeEnd metoduna ulaşana kadar saymaya devam ediyor. Ve örnekteki gibi 
+		ulaştığında saymayı bitirip konsola yazıyor. */ 
+	console.time('fetching data');
+	fetch('https://api.github.com/users/wesbos')
+		.then(data => data.json())
+		.then(data => {
+			console.timeEnd('fetching data'); // Buraya geldiğinde zaten veriye ulaşmış olacak
+			console.log(data);
+		});
+		
+	//dizi içerisindeki verileri tablo olarak görmemizi sağlıyor.
+	console.table(dogs);
+	
+  </script>
+</body>
+</html>

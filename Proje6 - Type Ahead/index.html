@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead ??</title>
+  <link rel="stylesheet" href="mystyle.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+const cities = [];
+
+/* fethc metodu d�� kaynaktan veri �ekmemize yar�yor. */
+fetch(endpoint) 
+  .then(blob => blob.json())  // ilk olarak �ekti�imiz verinin json oldu�unu belirtiyoruz. 
+  .then( data => cities.push(...data) ) 
+  /* yukar�da json verisini �ektikten sonra .then ile json i�erisindeki verilerin tamam�n� dizi halinde data de�i�kenine at�yor. 
+     data de�i�kenindeki veriyi direkt olarak cities = data yapamay�z ��nk� const de�i�keni tan�mland�ktan sonra de�i�itirlemez. 
+	 dolay�s�yla push metodu ile de�i�kene veri ekliyoruz. Ekledi�imiz bu veri ise de�i�kenin de�erini de�i�tirmeyip �st�ne veri ekler 
+	 ve veriler dizinin i�indeki farkl� bir diziye aktar�l�r. ... ise dizi i�ine dizi ekleme ve direk �st k�sma ekle gibi bir komut */
+	 
+	 console.log(cities.length);
+
+	 function findMatches(wordToMatch, cities){ 
+	 
+	    //kelimeler silindi�inde b�t�n �ehirleri gereksiz yere listelemesin diye bu if yap�s�n� olu�turdum.
+		if(wordToMatch.length == 0){
+			const warn = [
+			{city:"Filter", state:"for a city", population: ""},
+			{city:"or", state:"a state", population: ""}
+			];
+			return warn;
+		}
+		return cities.filter(place => {
+			const regex = new RegExp(wordToMatch, 'gi'); //de�i�keni regular expressions ile direkt match metodu i�erisine yazamayaca��m�z i�in de�i�ken olu�turuyoruz
+			return place.city.match(regex) || place.state.match(regex);
+		});
+	}
+	
+	//Bu metod population de�ikenini stringe �evirip virg�l koyuyor.
+	function putCommas(x){
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	}
+	
+	
+	function displayMatches(){
+		const matchArray = findMatches(this.value, cities); //anahtar kelime ile bulunanlar� de�i�kene at�yor
+		
+		/*Bulunan sonu�lar� dizinin elemanlar� renklendirilmeden �nce n�fus kalabal�kl���na g�re 
+			s�ralad�m */ 
+		const sortedResults = matchArray.sort( (a,b) => {
+			return b.population - a.population;
+			
+		});
+		
+		/* s�raland�ktan sonra da de�erleri d�zenliyoruz cityHL ile aranan anahtar kelime �ehir isminin i�erisinde var ise 
+			span etiketleri aras�na al�p hl s�n�f�n� ekliyoruzki arkas� sar� �izgili olsun  */ 
+		const finalResults = sortedResults.map(index =>  {
+			const regex = new RegExp(this.value, 'gi');  // regex direkt olarak de�i�kenler ile kullanamad���m�z i�in regExp objesi olu�turuldu
+			const cityHL = index.city.replace(regex, '<span class="hl">' + this.value + '</span>' );
+			const stateHL = index.state.replace(regex, '<span class="hl">' + this.value + '</span>' );
+			
+			return '<li> <span class = "name" >' + cityHL  + ' ' + stateHL + '</span> <span class="population">' + putCommas(index.population) + '</span> </li>';
+			
+		}).join('');
+		
+		document.querySelector(".suggestions").innerHTML = finalResults;
+	}
+	
+	//search box de�eri her de�i�ti�inde g�r�nt�le metodunu �a��r�yor. Fakat change eventi sadece o element focusu kaybettikten sonra �a��r�l�yor.
+	//document.querySelector(".search").addEventListener("change", displayMatches);  //her key b�rak�ld���nda arama �a�r�laca�� i�in buna gerek yok 
+	
+	//bu y�zden keyup eventi de ekliyoruz ki her harf yaz�ld�ktan sonra o yeni harf ile arama yap�ls�n.
+	document.querySelector(".search").addEventListener("keyup", displayMatches);
+	
+</script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+  <link rel = "stylesheet"  type="text/css"  href="mystyle.css" >
+</head>
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+	
+    <input id="spacing" type="range" name="spacing" min="10" max="100" value="0"  class = "slider" data-sizing="px">
+
+    <label for="blur">Blur:</label>
+	<!-- bu inputun max value'si 25 zaten 25 olduğunda resmi tamamen blur yapabiliyor. -->
+    <input id="blur" type="range" name="blur" min="0" max="25" value="0" class = "slider" data-sizing="px">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+  </div>
+	
+	   <img id="theImage" src="image.jpeg">
+ 
+</body>
+
+<script>
+	/* css selector ile controls sınıfındaki bütün input elementlerini nodelist e aktarıyor */
+	const inputs = document.querySelectorAll('.controls input');
+	
+	
+	/* Nodelist ile array arasındaki bazı farklardan birisi NodeList'te daha az metod
+	 olması. Oluşturduğumz input objesi nodelist fakat şuanda işimizi görüyor.
+		Bu yüzden bazen NodeList' imizi bir Array' e çevirmemiz gerekebilir. */
+	
+	function updateInputs(){
+	
+	
+		/*html kısmında data-sizing = px yazılmasının sebebi inputun valuesinin 
+		 tipini alıp değişim esnasında suffix olarak kullanmak istememiz. Bunu bir string 
+		 değişkenine atıyoruzki aşağıdaki satır çok uzun olmasın */
+		const suffix = this.dataset.sizing || '';
+		document.documentElement.style.setProperty( "--" + this.name,this.value + suffix);
+	}
+	
+	/* inputumuz array türünde(notelist) bir yapı olduğu için for each metoduna sahip.
+	bizde bu metod ile input içerisindeki bütün elementlere EventListener ekliyoruz. 
+	Bu EventListener in olayı inputun value'si her değiştiğinde verdiğimiz metodu çalıştırması. 
+	slider için her value değiştirildiğinde aktif edilir. ColorPicker içinde her renk değiştirdiğimizde aktif edilri. */
+	inputs.forEach(input => input.addEventListener('change', updateInputs));
+	//mousemove ise mouse inputlar üzerinde her hareket ettiğinde belirttiğimiz metodu çağırıyor.
+	inputs.forEach(input => input.addEventListener('mousemove', updateInputs));
+
+</script>
+</html>

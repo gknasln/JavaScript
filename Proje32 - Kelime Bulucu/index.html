@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Kelime Bulucu</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<header>
+		<img src="site_logo.jpg" width="250px" height="130px"> <img>
+		<h1 style="font-family: Brush Script MT; font-size: 3.5rem" >Kelime Bulucu </h1>
+	</header>
+	<div >
+	
+		<div class="formElements">
+			<div class="wordFieldContainer">
+				<input type="text" class= "textArea" placeholder="Harfleri giriniz..." > 
+			</div>
+			<div class="mustHaveContainer">
+				<input type="radio" name="searchPath" class= "radios" checked> 
+				<input type="text"  class= "textArea" placeholder="Bulunacak kelime bu kelimeyi içersin.."  >
+			</div>
+			<div class="betweenLetterContainer">
+				<input type="radio" name= "searchPath" class= "radios"  > 
+				<input type="text" class= "letterArea" placeholder="İlk harf" disabled >
+				<select id="optionBox" name="cars" disable>
+						<option value="1">1 Boşluk</option>
+						<option value="2">2 Boşluk</option>
+						<option value="3">3 Boşluk</option>
+						<option value="4">4 Boşluk</option>
+				</select>
+				<input type="text" class= "letterArea" placeholder="İkinci harf"  disabled >
+			</div>
+
+			<div class="buttonGroup">
+			<button id="searchButton" class="button">Hesapla</button>	
+			<button id="clearButton"  class="button">Temizle</button>	
+			</div>
+		
+		</div>
+	</div>
+</body>
+  <script type="text/javascript" src="myscript.js"></script>
+</html>

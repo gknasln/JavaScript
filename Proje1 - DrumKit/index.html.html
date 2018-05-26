@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" type="text/css" href="mystyle.css">
+</head>
+<body>
+
+
+  <div class="keys">
+  
+    <div id="div65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+	
+    <div id="div83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+	
+    <div id="div68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+	
+    <div id="div70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+	
+    <div id="div71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+	
+    <div id="div72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+	
+    <div id="div74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+	
+    <div id="div75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+	
+    <div id="div76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio id="65" src="sounds/clap.wav"></audio>
+  <audio id="83" src="sounds/hihat.wav"></audio>
+  <audio id="68" src="sounds/kick.wav"></audio>
+  <audio id="70" src="sounds/openhat.wav"></audio>
+  <audio id="71" src="sounds/boom.wav"></audio>
+  <audio id="72" src="sounds/ride.wav"></audio>
+  <audio id="74" src="sounds/snare.wav"></audio>
+  <audio id="75" src="sounds/tom.wav"></audio>
+  <audio id="76" src="sounds/tink.wav"></audio>
+
+<script>
+	//bu event her tuşa basıldığında çalışacak ve çalıştığında da fonksiyonu çalıştıracaktır.
+	
+	function play(e){
+		//basılan tuş koduna göre değişken içerisine audio dosyasını atıyoruz
+		const audio = document.getElementById(e.keyCode);
+		
+		const key = document.getElementById("div"+ e.keyCode);
+		
+		//id si olan objelerin dışında bir tuşa basarsak audio null değeri alıcaktır.
+		if(!audio)
+			return;
+			
+		//eğer audio null değil fonksiyon bitmez ve müzik oynatılır
+		audio.currentTime = 0; // ses dosyası bitmeden tekrar oynatma süresi
+		audio.play();
+		
+		//seçili div' e yeni bir style sınıfını ekliyor ve div border, büyüklüğü vs. değişiyor
+		key.classList.add('playing');
+	}
+		
+		function removeTransform(e){
+			if(e.propertyName != 'transform') 
+				return; // eğer ismi transform değilse metodu bitir.
+		
+			//this ile çağırdığımız obje eventin eklendiği objenin kendisi olucaktır.
+			this.classList.remove('playing');
+		
+		}
+		
+		
+		
+		//.key sınıfı içeren bütün divleri bir dizi içerisine aktarıyor
+		const keys = document.querySelectorAll('.key');
+		
+		
+		//for each döngüsü ile bütün keylere event ekliyor transition end yani işlem bittiğinde şu metodu çağır etkinliği oluşturuyor.
+		keys.forEach( key => key.addEventListener('transitionend',removeTransform) );
+		
+		
+		window.addEventListener('keydown', play);
+		
+		/* Bunu ben ekledim çünkü tuşlara hızlı basınca key divlerindeki playing sınıfı silinmediği için 
+		  beyaz borderler takılı kalıyor. Bu şekilde her 3 saniyede bir playing sınıfı varsa otomatik olarak silicek. */
+		function checkBorderBugs(e){
+			keys.forEach(index =>  index.classList.remove('playing') );
+			
+		}
+		setInterval(checkBorderBugs, 3000);
+		
+</script>
+
+
+</body>
+</html>

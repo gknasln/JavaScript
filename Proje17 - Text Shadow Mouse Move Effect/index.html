@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sort Without Articles</title>
+</head>
+<body>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: url("https://source.unsplash.com/nDqA4d5NL0k/2000x2000");
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      min-height: 100vh;
+    }
+    #bands {
+      list-style: inside square;
+      font-size: 20px;
+      background: white;
+      width: 500px;
+      margin: auto;
+      padding: 0;
+      box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+    #bands li {
+      border-bottom: 1px solid #efefef;
+      padding: 20px;
+    }
+    #bands li:last-child {
+      border-bottom: 0;
+    }
+    a {
+      color: #ffc600;
+      text-decoration: none;
+    }
+  </style>
+
+  <ul id="bands">
+  </ul>
+
+<script>
+const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 
+'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+
+const list = document.querySelector('#bands');
+
+// The An ve A olmadan listeyi sırala
+
+//Maalesef benim yaptığımm :( (çalışıyor)
+bands.sort((a,b) => {
+    let fixedA;
+    let fixedB;
+    if(a.startsWith('The'))
+        fixedA  = a.substr(3, a.length).trim();
+    else if(a.startsWith('A '))  //A dan sonra boşluk önemli
+        fixedA = a.substr(1, a.length).trim();
+    else if(a.startsWith('An '))  //A dan sonra boşluk önemli
+        fixedA = a.substr(2, a.length).trim();
+    else
+        fixedA = a;
+
+    if(b.startsWith('The'))
+        fixedB  = b.substr(3, b.length).trim();
+    else if(b.startsWith('A '))  //A dan sonra boşluk önemli
+        fixedB = b.substr(1, b.length).trim();
+    else if(b.startsWith('An '))  //A dan sonra boşluk önemli
+        fixedB = b.substr(2, b.length).trim();
+    else
+        fixedB = b;
+    
+    return fixedA.toLowerCase() > fixedB.toLowerCase() ? 1:-1;
+});
+
+
+
+// onun yaptığı...
+
+function strip(bandName){
+    /* ^ sembolü startsWith metodu oluyor  | koyarak ta birden fazla stringi aynı
+     yerde kontrol edebiliyor. /i de zaten case sensitive değil demek */
+    return bandName.replace(/^(a |the |and )/i, '').trim();
+}
+
+const sortedBand = bands.sort(function(a,b){
+    if(strip(a) > strip(b) ){
+        return 1;
+    } else {
+        return -1;
+    }
+    });
+
+//Bu şekilde de yapabilirdi
+const sortedBands = bands.sort( (a,b) => strip(a) > strip(b) ? 1:-1);
+
+
+
+
+
+
+document.querySelector('#bands').innerHTML = bands.map(index => {
+    return `
+        <li>${index}</li> 
+        `;
+}).join("");
+
+</script>
+
+</body>
+</html>
